@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samurai Fighters 2d Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
+    <style>
+
+
+
+        *{
+            box-sizing: border-box;
+            font-family: "Jersey 15", serif;
+        }
+
+        body{
+            background-color: rgb(66, 66, 66);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        canvas{
+            display: block;
+            width: 1280px;
+            height: 800px;
+        }
+
+
+        .red-container{
+            position: relative;
+            display: inline-block;
+        }
+
+        .smaller-red-container{
+            position: absolute;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .player-health{
+            background-color: yellow;
+            height: 30px;
+            width: 100%;
+        }
+
+        .timer{
+            height: 50px;
+            width: 100px;
+            background-color: black;
+            color: white;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            font-size: 40px;
+        }
+
+        .div-none{
+            height: 30px;
+            background: rgba(150, 15, 15, 0.9);
+            width: 100%;
+        }
+
+        .div-none2{
+            height: 30px;
+            background: rgba(150, 15, 15, 0.9);
+        }
+
+        .player-health{
+            position: absolute;
+            background: #818CF8;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .player-health-parent{
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            border-top: 2px solid white;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+        }
+
+        .player2-health{
+            position: absolute;
+            background: #818CF8;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .player2-health-parent{
+            position: relative;
+            width: 100%;
+            border-top: 2px solid white;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+        }
+
+        .result{
+            position: absolute;
+            color: rgb(255, 255, 255);
+            align-items: center;
+            justify-content: center;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: none;
+            font-size: 80px;
+            text-shadow: rgb(255, 0, 0) 1px 0 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <!--Red container div-->
+    <div class="red-container">
+        <!--Smaller red container div-->
+        <div class="smaller-red-container">
+            <!--Player Health-->
+            <div class="player-health-parent">
+                <!--Player 2 Health-->
+                <div class="player-health"></div>
+
+                <div class="div-none"></div>
+            </div>
+            <!--Timer-->
+            <div class="timer">60</div>
+
+            <div class="player2-health-parent">
+                <!--Player 2 Health-->
+                <div class="player2-health"></div>
+
+                <div class="div-none2"></div>
+            </div>
+        </div>
+        <div class="result">Tie</div>
+        <canvas></canvas>
+    </div>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/utils.js"></script>
+<script src="js/classes.js"></script>
+<script src="index.js"></script>
+
+</body>
+</html>
