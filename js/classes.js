@@ -85,7 +85,7 @@ class Fighter extends Sprite{
             height: attackBox.height
         },
         this.color = color
-        this.isAttacking
+        this.isAttacking = false
         this.health = 100
         this.framesCurrent = 0
         this.framesElapsed = 0
@@ -99,6 +99,9 @@ class Fighter extends Sprite{
             sprites[sprite].image = new Image()
             sprites[sprite].image.src = sprites[sprite].imageSrc
         }
+
+        this.attackCooldown = 600
+        this.canAttack = true
         
     }
 
@@ -113,13 +116,20 @@ class Fighter extends Sprite{
         }
         if(this.health <= 0){
             this.switchSprite('death')
+            determineWinner({player, enemy, timerId})
         }
+
+   
+        
 
 
         //Draw attackbox
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y
+        
+        //ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
         //ctx.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width,this.attackBox.height)
+
 
         this.position.y += this.velocity.y
         this.position.x += this.velocity.x
@@ -133,19 +143,38 @@ class Fighter extends Sprite{
         
     }
 
+    restart(){
+        this.image = this.sprites.idle.image
+        this.framesMax = this.sprites.idle.framesMax
+        this.framesCurrent = 0
+    }
+
     attack(){
-        this.switchSprite('attack1')
-        this.isAttacking = true
-        
+        if(this.canAttack){
+            this.switchSprite('attack1')
+            this.isAttacking = true
+            this.canAttack = false
+
+            setTimeout (() =>{
+                this.canAttack = true
+            }, this.attackCooldown)
+        }
+
+
+
     }
 
     takeHit(){
-        this.health -= 20
+        this.health -= damage
+        console.log(this.health)
         if(this.health <= 0){
             this.switchSprite('death')
             
         }else{
             this.switchSprite('takeHit')
+            this.velocity.y = -20
+            
+            
         }
     }
 
@@ -155,6 +184,8 @@ class Fighter extends Sprite{
         }
         
     }
+
+
 
     switchSprite(sprite){
         if(this.image === this.sprites.death.image){

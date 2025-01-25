@@ -1,11 +1,130 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
 
-window.addEventListener('resize', ()=>{
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+var endGame
+
+var playerAttack
+
+var started = false
+
+var timeoutStarted = false
+
+function limitDigits(input) {
+    
+    if (input.value.length > 3) {
+      input.value = input.value.slice(0, 3); 
+    }
+  }
+
+const startGame = document.querySelector('.startGame')
+const menu = document.querySelector('.menu')
+var resultElement = document.querySelector('.result')
+
+
+var settingsButton = document.querySelector('.settingsButton')
+var menuConfigsBackButton = document.querySelector('.menuConfigs-back')
+var menuConfigs = document.querySelector('.menuConfigs')
+var menuStart = document.querySelector('.menuStart')
+
+
+startGame.addEventListener('click', () =>{
+    
+    if(menu.style.display !== 'none'){
+        menu.style.display = 'none'
+    }
+
+    resultElement.style.opacity = '1'
+    resultElement.style.display = 'none'
+    timeoutStarted = false
+
+    if(started !== true){
+        restartGame()
+    }
+    started = true
+    
 })
 
+settingsButton.addEventListener('click', () =>{
+    if(menuStart.style.display !== 'none'){
+        menuStart.style.display = 'none'
+        menuConfigs.style.display = 'flex'
+    }
+})
+
+menuConfigsBackButton.addEventListener('click', () =>{
+    if(menuConfigs.style.display !== 'none'){
+        menuStart.style.display = 'flex'
+        menuConfigs.style.display = 'none'
+    }
+})
+
+var damage = 20
+
+var menuConfigsApply = document.querySelector('.menuConfigs-apply')
+var inputTimer = document.querySelector('.inputTimer')
+var inputDamage = document.querySelector('.inputDamage')
+
+
+
+function attTimer(){
+   timer = parseInt(inputTimer.value) || 60
+   document.querySelector('.timer').innerHTML = timer
+}
+
+
+menuConfigsApply.addEventListener('click', () =>{
+
+    attTimer()
+    damage = inputDamage.value
+    if(menuConfigs.style.display !== 'none'){
+        menuStart.style.display = 'flex'
+        menuConfigs.style.display = 'none'
+    }
+
+})
+
+
+function callofDetermine(){
+    if(!timeoutStarted){
+        timeoutStarted = true
+
+                endGame = setTimeout(() => {      
+                resultElement.style.transition = 'opacity 2s ease';
+                resultElement.style.opacity = '0';
+
+                if(resultElement.style.opacity == '0'){
+                    setTimeout(() =>{
+                        if(menu.style.display !== 'flex'){
+                            menu.style.display = 'flex'
+                        }
+                        resultElement.style.display = 'none'
+                        attTimer()
+                        
+                    }, 2000)
+                    
+            }
+
+    
+}, 3000);}}
+
+
+function restartGame(){
+    player.position.x = 50
+    enemy.position.x = canvas.width - 80
+    player.dead = false
+    enemy.dead = false
+    document.querySelector('.player-health').style.width = '100%'
+    document.querySelector('.player2-health').style.width = '100%'
+    player.restart()
+    enemy.restart()
+    player.health = 100
+    enemy.health = 100
+    
+    timer = parseInt(inputTimer.value)
+    timerId = setTimeout(decreaseTimer, 1000)
+}
+
+ 
 canvas.width = 1024
 canvas.height = 576
 
@@ -52,14 +171,14 @@ const player = new Fighter({
         x: 216, //x 216, y 137
         y: 137
     },
-    framesHold: 7,
+    framesHold: 8,
     attackBox: {
         offset:{
             x: 30,
-            y: 50
+            y: -10
         },
-        width: 200,
-        height: 50
+        width: 190,
+        height: 130
     },
     sprites: {
         idle: {
@@ -96,7 +215,7 @@ const player = new Fighter({
 
 const enemy = new Fighter({
     position: {
-        x: canvas.width - 50,
+        x: canvas.width - 80,
         y: 0
     },
     velocity: {
@@ -107,17 +226,17 @@ const enemy = new Fighter({
     framesMax: 4,
     scale: 2.3,
     offset: {
-        x: 216, //        x: 216,y: 147
+        x: 216, //   x: 216,y: 147
         y: 147
     },
-    framesHold: 12,
+    framesHold: 10,
     attackBox: {
         offset:{
-            x: -170,
-            y: 50
+            x: -175,
+            y: 5
         },
-        width: 170,
-        height: 50
+        width: 175,
+        height: 140
     },
     sprites: {
         idle: {
@@ -172,7 +291,8 @@ const keys = {
 }
 
 //Is in utils.js
-decreaseTimer()
+//decreaseTimer()
+var timeOver = false
 
 function animate(){
     window.requestAnimationFrame(animate)
@@ -231,6 +351,7 @@ function animate(){
         enemy.switchSprite('fall')
     }
 
+
      //---Detect for collision
      //Player 1
      if(rectangularCollision({
@@ -245,10 +366,8 @@ function animate(){
             gsap.to('.player2-health', {
                 width: enemy.health + '%'
             })
+
         }
-
-
-
      }else if(player.isAttacking && player.framesCurrent == 4){
         player.isAttacking = false
      }
@@ -256,29 +375,43 @@ function animate(){
      
 
      //Player 2
-     if(rectangularCollision({rectangle1: enemy, rectangle2: player}) && 
-     enemy.isAttacking && enemy.framesCurrent == 2) {
+     if(rectangularCollision
+    ({rectangle1: enemy, rectangle2: player}) && 
+     enemy.isAttacking && 
+     enemy.framesCurrent == 2) {
 
-        if(enemy.health <= 0){return}else{
+        if(enemy.health <= 0){return}
+        else{
             player.takeHit()
+
+            
+            
             enemy.isAttacking = false
+     
             //Using gsap to animate the health bar
             //document.querySelector('.player-health').style.width = player.health + '%'
             gsap.to('.player-health', {
                 width: player.health + '%',
                 duration: 0.5
             })
+
+            
+
         }
 
-
-        
      }else if(enemy.isAttacking && enemy.framesCurrent == 2){
+   
         enemy.isAttacking = false
+
      }
 
-    if(enemy.health <= 0 || player.health <= 0){
+     if(enemy.health <= 0 || player.health <= 0){
         determineWinner({player, enemy, timerId})
     }
+ 
+
+
+    console.log(player.health, enemy.health)
 }
 animate()
 
@@ -289,7 +422,7 @@ animate()
 window.addEventListener('keydown', (event) =>{
     const key = event.key.toLowerCase()
 
-    if(player.health > 0){
+    if(player.health > 0 && !timeOver && started){
     switch (key){
         case 'd': 
             keys.d.pressed = true
@@ -309,12 +442,15 @@ window.addEventListener('keydown', (event) =>{
             break
 
         case ' ':
-            player.attack()
+            if(player.isAttacking == false){
+                player.attack()
+                player.lastKey = ' '
+            }
             break
 
     }}
 
-    if(enemy.health > 0){
+    if(enemy.health > 0 && !timeOver && started){
     switch(key){
         case 'arrowright':
             keys.arrowright.pressed = true
@@ -334,7 +470,11 @@ window.addEventListener('keydown', (event) =>{
             break
 
         case 'enter':
-            enemy.attack()
+                if(enemy.isAttacking == false){
+                    enemy.attack()
+                    enemy.lastKey = 'enter'
+                }
+            break
         }}
 })
 

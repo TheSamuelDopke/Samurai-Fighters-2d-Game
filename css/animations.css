@@ -1,0 +1,24 @@
+.animated-text {
+    display: inline-block;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    animation: glow 1.5s ease-in-out infinite alternate;
+    color: #ff00f2;
+
+    overflow: hidden;
+  }
+  
+
+
+  @keyframes glow {
+    0% {
+      
+      color: #ff27f4bd;
+    }
+    100% {
+        
+      color: rgb(247, 0, 255); /* Cor final */
+    }
+  }
+
